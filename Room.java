@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 public class Room {
     private String description;
     private HashMap<String, Room> exits = new HashMap<String, Room>();
+    private ArrayList<Item> itemsOnRoom = new ArrayList<Item>();
 
     /**
      * Create a room described "description". Initially, it has
@@ -28,7 +30,6 @@ public class Room {
      */
     public Room(String description) {
         this.description = description;
-
     }
 
     /**
@@ -45,24 +46,44 @@ public class Room {
         exits.put(direction, neightbor);
     }
 
+    private void setItem(Item item) {
+        itemsOnRoom.add(item);
+    }
+
+    public void createItem(String description, int weight, String name, int amount) {
+        Item item = new Item(description, weight, name, amount);
+        setItem(item);
+    }
+
     /**
      * @return The description of the room.
      */
     public Room getExit(String direction) {
         return exits.get(direction) != null ? exits.get(direction) : null;
-
     }
 
-    public String getLongDescription(){
+    private String getExitString() {
         String information = "";
 
         Set<String> keys = exits.keySet();
         for (String direction : keys) {
             information += " " + direction;
         }
-
-        return "\n"+"You are "+ description + "\n" + "Exits: "+information;
+        return information;
     }
 
-    
+    private String getItems() {
+        String information = "";
+
+        for (Item item : itemsOnRoom) {
+            information += " " + item.getName();
+        }
+        return information;
+    }
+
+    public void getLongDescription() {
+        System.out.println(
+                "\n" + "You are " + description + "\n" + "Exits: " + getExitString() + "\n" + " Items " + getItems());
+    }
+
 }
